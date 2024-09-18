@@ -1,3 +1,11 @@
+# 3.0.2 (2024-09-18)
+====================
+
+### Bugfixes
+
+- Make sure MediaProxy can connect to the homeserver over https. ([\#1826](https://github.com/matrix-org/matrix-appservice-irc/issues/1826))
+
+
 # 3.0.1 (2024-09-05)
 ====================
 
