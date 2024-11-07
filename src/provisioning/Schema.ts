@@ -13,7 +13,9 @@ const matrixRoomIdSchema: JSONSchemaType<string> = {
 
 const remoteRoomChannelSchema: JSONSchemaType<string> = {
     type: "string",
-    pattern: "^([#+&]|(![A-Z0-9]{5}))[^\\s:,]+$",
+    // According to https://www.rfc-editor.org/rfc/rfc1459#section-1.3
+    // eslint-disable-next-line no-control-regex
+    pattern: "^#([^:\\x00-\\x1F\\s,]){1,199}$",
 };
 
 const remoteRoomServerSchema: JSONSchemaType<string> = {

@@ -1,0 +1,1 @@
+Disallow control characters in channel names sent via Provisioning API.
