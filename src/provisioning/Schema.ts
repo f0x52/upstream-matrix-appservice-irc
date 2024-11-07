@@ -27,6 +27,20 @@ const opNickSchema: JSONSchemaType<string> = {
 
 const keySchema: JSONSchemaType<string> = {
     type: "string",
+    // The regex was designed with the following considerations:
+    // - A key must not be empty (if it exists).
+    // - It cannot start with ':' because that would indicate a trailing
+    //   parameter and we treat key exclusively as a middle parameter.
+    // - Commas are disallowed to prevent multiple keys, as we do not support
+    //   joining multiple channels simultaneously.
+    // - Space is disallowed because it signifies the end of the parameter. We
+    //   use \s instead of a literal space to also exclude some Unicode
+    //   whitespace characters out of precaution.
+    //   (see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet)
+    // - Control characters (ASCII 00-1F) are excluded to prevent issues with
+    //   printing and parsing reliability. This is more stringent than
+    //   recommended by RFC2812.
+    pattern: "^[^:\\x00-\\x1F\\s,][^\\x00-\\x1F\\s,]*$",
     nullable: true,
 };
 
