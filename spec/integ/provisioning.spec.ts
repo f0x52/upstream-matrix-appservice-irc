@@ -119,7 +119,7 @@ describe("Provisioning API", function() {
         remote_room_server: "irc.example",
         matrix_room_id: "!foo:bar",
         op_nick: receivingOp.nick,
-        key: null,
+        key: "",
         user_id: mxUser.id,
     };
 

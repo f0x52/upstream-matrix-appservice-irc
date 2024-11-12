@@ -10,6 +10,7 @@ describe("isValidQueryLinkBody", function() {
 
     it("should allow clean keys", () => {
         for (const key of [
+            '',
             'foo',
             'foo:bar',
             undefined,
@@ -22,7 +23,6 @@ describe("isValidQueryLinkBody", function() {
 
     it("should disallow abusive keys", () => {
         for (const key of [
-            '',
             'foo\nbar',
             ':foobar',
             'foo bar',
