@@ -1,11 +1,11 @@
 # 3.0.3 (2024-11-14)
 ====================
 
-### Bugfixes
+### Security
 
-- Validate the `key` parameter in Provisioning API. ([\#1](https://github.com/matrix-org/matrix-appservice-irc/issues/1))
-- Disallow control characters in channel names sent via Provisioning API. ([\#2](https://github.com/matrix-org/matrix-appservice-irc/issues/2))
-- Wrap some internal server errors in provisioning API. ([\#4](https://github.com/matrix-org/matrix-appservice-irc/issues/4))
+- Fix for ([GHSA-c3hj-hg7p-rrq5](https://github.com/matrix-org/matrix-appservice-irc/security/advisories/GHSA-c3hj-hg7p-rrq5)).
+- Disallow control characters in channel names sent via Provisioning API.
+- Wrap some internal server errors in provisioning API.
 
 # 3.0.2 (2024-09-18)
 ====================
