@@ -1,10 +1,15 @@
-# 3.0.2 (2024-09-18)
+# 3.0.3 (2024-11-14)
 ====================
 
 ### Bugfixes
 
-- Make sure MediaProxy can connect to the homeserver over https. ([\#1826](https://github.com/matrix-org/matrix-appservice-irc/issues/1826))
+- Validate the `key` parameter in Provisioning API. ([\#1](https://github.com/matrix-org/matrix-appservice-irc/issues/1))
+- Disallow control characters in channel names sent via Provisioning API. ([\#2](https://github.com/matrix-org/matrix-appservice-irc/issues/2))
+- Wrap some internal server errors in provisioning API. ([\#4](https://github.com/matrix-org/matrix-appservice-irc/issues/4))
 
+# 3.0.2 (2024-09-18)
+====================
+- Make sure MediaProxy can connect to the homeserver over https. ([\#1826](https://github.com/matrix-org/matrix-appservice-irc/issues/1826))
 
 # 3.0.1 (2024-09-05)
 ====================
