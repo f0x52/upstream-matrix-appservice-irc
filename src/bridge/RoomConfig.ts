@@ -2,6 +2,7 @@ import { Bridge } from "matrix-appservice-bridge";
 import { IrcRoom } from "../models/IrcRoom";
 import QuickLRU from "quick-lru";
 import getLogger from "../logging";
+import { delay } from "../promiseutil";
 
 interface RoomConfigContent {
     lineLimit?: number;
@@ -58,7 +59,7 @@ export class RoomConfig {
         // We don't want to spend too long trying to fetch the state, so return null.
         return Promise.race([
             internalFunc(),
-            new Promise<null>(res => setTimeout(() => res(null), STATE_TIMEOUT_MS)),
+            delay(STATE_TIMEOUT_MS).then(() => null)
         // We *never* want this function to throw, as it's critical for the bridging of messages.
         // Instead we return null for any errors.
         ]).catch(ex => {
