@@ -16,7 +16,7 @@ limitations under the License.
 
 import * as promiseutil from "../promiseutil";
 import { EventEmitter } from "events";
-import Ident from "./Ident"
+import Ident from "./Ident";
 import { ConnectionInstance, InstanceDisconnectReason } from "./ConnectionInstance";
 import { ClientEvents, Message } from "matrix-org-irc";
 import { IrcRoom } from "../models/IrcRoom";
