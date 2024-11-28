@@ -454,18 +454,12 @@ export class RoomAccessSyncer {
                     `Failed to update visibility map for ${channel} ${server.getNetworkId()}: ${ex}`
                 );
             }
-
-            // Only set this after we've applied the changes.
-            matrixRooms.map((room) => {
-                this.ircBridge.getStore().setModeForRoom(room.getId(), "s", enabled);
-            });
         }
-        // "k" and "i"
-        await Promise.all(matrixRooms.map((room) =>
-            this.ircBridge.getStore().setModeForRoom(room.getId(), mode, enabled)
-        ));
 
-        const promises = matrixRooms.map(async (room) => {
+        for (const room of matrixRooms) {
+            // Store updated mode
+            await this.ircBridge.getStore().setModeForRoom(room.getId(), mode, enabled)
+
             switch (mode) {
                 case "k":
                 case "i":
@@ -489,9 +483,7 @@ export class RoomAccessSyncer {
                     // Not reachable, but warn anyway in case of future additions
                     req.log.warn(`onMode: Unhandled channel mode ${mode}`);
             }
-        });
-
-        await Promise.all(promises);
+        }
     }
 
     /**
