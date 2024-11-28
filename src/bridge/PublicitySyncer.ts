@@ -80,21 +80,20 @@ export class PublicitySyncer {
     public async updateVisibilityMap(channel: string, server: IrcServer, isSecret: boolean): Promise<boolean> {
         const key = this.getIRCVisMapKey(server.getNetworkId(), channel);
         log.debug(`updateVisibilityMap ${key} isSecret:${isSecret}`);
-        let hasChanged = false;
         if (this.visibilityMap.channelIsSecret.get(key) !== isSecret) {
             this.visibilityMap.channelIsSecret.set(key, isSecret);
-            hasChanged = true;
-        }
 
-        if (hasChanged) {
             try {
                 await this.solveVisibility(channel, server)
             }
             catch (err) {
                 throw Error(`Failed to sync publicity for ${channel}: ${err.message}`);
             }
+
+            return true;
         }
-        return hasChanged;
+
+        return false;
     }
 
     /* Solve any inconsistencies between the currently known state of channels '+s' modes
