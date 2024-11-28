@@ -38,11 +38,11 @@ export async function runSchema(connection: PoolClient) {
         const serverConfigsRes = await connection.query<{domain: string}>(
             "SELECT DISTINCT domain FROM client_config WHERE config->>'ipv6' IS NOT NULL;"
         );
-        if (serverConfigsRes.rowCount === 0) {
+        if (serverConfigsRes.rows.length === 0) {
             // No servers to migrate?
             throw Error("No client_configs found with ipv6 addresses, but counter was found");
         }
-        else if (serverConfigsRes.rowCount! > 1) {
+        else if (serverConfigsRes.rows.length > 1) {
             log.warn("More than one IPv6 server configured, starting both ipv6 counters from the same value.");
         }
         // Because we cannot determine which IRC network(s) are using the existing counter

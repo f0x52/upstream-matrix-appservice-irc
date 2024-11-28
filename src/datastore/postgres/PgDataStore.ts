@@ -181,7 +181,7 @@ export class PgDataStore implements DataStore, ProvisioningStore {
             params = params.concat(origin);
         }
         const pgEntry = await this.pgPool.query<RoomRecord>(statement, params);
-        if (!pgEntry.rowCount) {
+        if (pgEntry.rows.length === 0) {
             return null;
         }
         return PgDataStore.pgToRoomEntry(pgEntry.rows[0]);
@@ -239,7 +239,7 @@ export class PgDataStore implements DataStore, ProvisioningStore {
 
     public async getIrcChannelsForRoomId(roomId: string): Promise<IrcRoom[]> {
         let entries = await this.pgPool.query("SELECT irc_domain, irc_channel FROM rooms WHERE room_id = $1", [roomId]);
-        if (entries.rowCount === 0) {
+        if (entries.rows.length === 0) {
             // Could be a PM room, if it's not a channel.
             entries = await this.pgPool.query("SELECT irc_domain, irc_nick FROM pm_rooms WHERE room_id = $1", [roomId]);
         }
@@ -395,7 +395,7 @@ export class PgDataStore implements DataStore, ProvisioningStore {
                 virtualUserId,
             ]
         );
-        if (res.rowCount === 0) {
+        if (res.rows.length === 0) {
             return null;
         }
         return new MatrixRoom(res.rows[0].room_id);
@@ -407,7 +407,7 @@ export class PgDataStore implements DataStore, ProvisioningStore {
             "SELECT room_id, matrix_user_id, virtual_user_id FROM pm_rooms WHERE room_id = $1", [
                 roomId,
             ]);
-        if (res.rowCount === 0) {
+        if (res.rows.length === 0) {
             return null;
         }
         return new MatrixRoom(res.rows[0].room_id);
@@ -470,7 +470,7 @@ export class PgDataStore implements DataStore, ProvisioningStore {
 
     public async getAdminRoomById(roomId: string): Promise<MatrixRoom|null> {
         const res = await this.pgPool.query("SELECT room_id FROM admin_rooms WHERE room_id = $1", [roomId]);
-        if (res.rowCount === 0) {
+        if (res.rows.length === 0) {
             return null;
         }
         return new MatrixRoom(roomId);
@@ -485,7 +485,7 @@ export class PgDataStore implements DataStore, ProvisioningStore {
 
     public async getAdminRoomByUserId(userId: string): Promise<MatrixRoom|null> {
         const res = await this.pgPool.query("SELECT room_id FROM admin_rooms WHERE user_id = $1", [userId]);
-        if (res.rowCount === 0) {
+        if (res.rows.length === 0) {
             return null;
         }
         return new MatrixRoom(res.rows[0].room_id);
@@ -511,7 +511,7 @@ export class PgDataStore implements DataStore, ProvisioningStore {
                 userId,
                 domain
             ]);
-        if (res.rowCount === 0) {
+        if (res.rows.length === 0) {
             return null;
         }
         const row = res.rows[0];
@@ -575,7 +575,7 @@ export class PgDataStore implements DataStore, ProvisioningStore {
         const res = await this.pgPool.query("SELECT user_id, data FROM matrix_users WHERE user_id = $1", [
             `@${localpart}:${this.bridgeDomain}`,
         ]);
-        if (res.rowCount === 0) {
+        if (res.rows.length === 0) {
             return null;
         }
         const row = res.rows[0];
@@ -649,11 +649,16 @@ export class PgDataStore implements DataStore, ProvisioningStore {
             "WHERE config->>'username' = $1 AND domain = $2 AND client_config.user_id = matrix_users.user_id",
             [username, domain]
         );
-        if (res.rowCount === 0) {
+        if (res.rows.length === 0) {
             return undefined;
         }
-        else if (res.rowCount! > 1) {
-            log.error("getMatrixUserByUsername returned %s results for %s on %s", res.rowCount, username, domain);
+        else if (res.rows.length > 1) {
+            log.error(
+                "getMatrixUserByUsername returned multiple results (%d) for %s on %s",
+                res.rows.length,
+                username,
+                domain
+            );
         }
         return new MatrixUser(res.rows[0].user_id, res.rows[0].data);
     }
@@ -715,7 +720,7 @@ export class PgDataStore implements DataStore, ProvisioningStore {
 
     public async isUserDeactivated(userId: string): Promise<boolean> {
         const res = await this.pgPool.query(`SELECT user_id FROM deactivated_users WHERE user_id = $1`, [userId]);
-        return res.rowCount! > 0;
+        return res.rows.length > 0;
     }
 
     public async deactivateUser(userId: string) {
